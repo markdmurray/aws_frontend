@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import CreateView
 from .models import ListRegions
-from .forms import ListRegionsForm
+from .forms import ListRegionsForm, TextRegionsForm
 import boto3
 # Create your views here.
 
@@ -31,6 +31,7 @@ def check_bucket_in_region(request):
             return render(request, 'index.html', context={'form':form, 'response':response})
     else:
         form = ListRegionsForm
+        text = TextRegionsForm
     
-    return render(request, 'index.html', context={ 'form':form })
+    return render(request, 'index.html', context={ 'form':form, 'text':text })
             
