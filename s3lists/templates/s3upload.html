@@ -1,0 +1,12 @@
+<h1>s3upload</h1>
+
+<form action="" method="post">{% csrf_token %}
+    {{ form }}
+    <input type="submit" value="create bucket"/>
+</form>
+
+<p>{{ response_code }}</p>
+
+{% if response_code %}
+<p>Bucket Created!</p>
+{% endif %}

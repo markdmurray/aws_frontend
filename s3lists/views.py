@@ -26,9 +26,9 @@ def check_bucket_in_region(request):
 
         if form.is_valid():
             region = form.cleaned_data['regions']
-            client = boto3.client('ec2', region_name=region)
-            response = client.describe_instances()
-            return render(request, 'index.html', context={'form':form, 'response':response})
+            client = boto3.client('s3', region_name=region)
+            response = client.list_buckets()
+            return render(request, 'index.html', context={'form':form, 'response':success})
     else:
         form = ListRegionsForm
         text = TextRegionsForm
@@ -39,7 +39,7 @@ def create_bucket(request):
     if request.method == 'POST':
         form = S3UploadForm(request.POST)
 
-        if form .is_valid():
+        if form.is_valid():
             bucket_name = form.cleaned_data['bucket_name']
             region = form.cleaned_data['region']
             client = boto3.client('s3', region_name=region)
@@ -49,8 +49,10 @@ def create_bucket(request):
                     'LocationConstraint': region
                 },
             )
-            success_code = response['ResponseMetadata']    
-            return render(request, 's3upload.html', context={ 'form':form, 'response':success_code })
+            response = response['ResponseMetadata']
+            response_code = response['HTTPStatusCode'] 
+            if response_code == 200: 
+                return render(request, 's3upload.html', context={ 'form':form, 'response':response_code })
     else:
         form = S3UploadForm 
     
